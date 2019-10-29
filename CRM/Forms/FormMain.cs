@@ -43,7 +43,7 @@ namespace CRM
             }
 
             UpdateLists();
-            
+
             _formClient = new FormClient();
             _formOrder = new FormOrder(ClientsList);
         }
@@ -100,14 +100,12 @@ namespace CRM
             {
                 if (clientListView.SelectedItems[0].Tag is Client client)
                 {
-                    ClientRemoved?.Invoke(client.Id, EventArgs.Empty);
+                    ClientRemoved?.Invoke(client, EventArgs.Empty);
                 }
             }
             catch
             {
                 MessageBox.Show("Клиент не выбран.");
-                Connect();
-                UpdateLists();
             }
         }
         private void AddOrder_Click(object sender, EventArgs e)
@@ -170,8 +168,8 @@ namespace CRM
             catch
             {
                 MessageBox.Show("Заказ не выбран.");
-                Connect();
-                UpdateLists();
+                //Connect();
+                //UpdateLists();
             }
         }
         private void Exit_Click(object sender, EventArgs e)
@@ -232,6 +230,7 @@ namespace CRM
                 if (((Client)(clientListView.Items[i].Tag)).Id == client.Id)
                 {
                     clientListView.Items.RemoveAt(i);
+                    break;
                 }
             }
         }
@@ -243,9 +242,10 @@ namespace CRM
         {
             for (int i = 0; i < orderListView.Items.Count; ++i)
             {
-                if (((Order)(clientListView.Items[i].Tag)).Id == order.Id)
+                if (((Order)(orderListView.Items[i].Tag)).Id == order.Id)
                 {
-                    clientListView.Items.RemoveAt(i);
+                    orderListView.Items.RemoveAt(i);
+                    break;
                 }
             }
         }
@@ -286,32 +286,29 @@ namespace CRM
         }
         private void List_ClientRemoved(object sender, EventArgs e)
         {
-            var clientId = (int)sender;
-            foreach (var client in ClientsList)
+            if (sender is Client client)
             {
-                if (client.Id == clientId)
+                DeleteClient(client);
+                DeleteFromListView(client);
+                ClientsList.Remove(client);
+
+                foreach (var order in OrdersList)
                 {
-                    DeleteClient(client);
-                    DeleteFromListView(client);
-                    ClientsList.Remove(client);
-                    break;
+                    if (order.Client.Id == client.Id)
+                    {
+                        DeleteOrder(order);
+                        DeleteFromListView(order);
+                        OrdersList.Remove(order);
+                        break;
+                    }
                 }
-            }
-            foreach (var order in OrdersList)
-            {
-                if (order.Client.Id == clientId)
+                foreach (var item in _formOrder.OrderClient.Items)
                 {
-                    DeleteOrder(order);
-                    DeleteFromListView(order);
-                    OrdersList.Remove(order);
-                }
-            }
-            foreach (var client in _formOrder.OrderClient.Items)
-            {
-                if ((client as Client).Id == clientId)
-                {
-                    _formOrder.OrderClient.Items.Remove(client);
-                    break;
+                    if ((item as Client).Id == client.Id)
+                    {
+                        _formOrder.OrderClient.Items.Remove(item);
+                        break;
+                    }
                 }
             }
         }
@@ -338,7 +335,7 @@ namespace CRM
                     }
                     break;
                 }
-                UpdateLists();
+                UpdateOrderList();
             }
         }
         private void List_OrderRemoved(object sender, EventArgs e)
@@ -367,8 +364,11 @@ namespace CRM
                 Client tempClient = dataBase.Clients
                     .Where(o => o.Id == client.Id)
                     .FirstOrDefault();
-                dataBase.Clients.Remove(tempClient);
-                dataBase.SaveChanges();
+                if (tempClient != null)
+                {
+                    dataBase.Clients.Remove(tempClient);
+                    dataBase.SaveChanges();
+                }
             }
         }
         /// <summary>
@@ -398,6 +398,7 @@ namespace CRM
         {
             ClientsList.Clear();
             OrdersList.Clear();
+
             using (var dataBase = new CRMContext())
             {
                 var Clients = dataBase.Clients;
@@ -417,12 +418,19 @@ namespace CRM
         /// </summary>
         private void UpdateLists()
         {
+            UpdateClientList();
+            UpdateOrderList();
+        }
+        private void UpdateClientList()
+        {
             clientListView.Items.Clear();
             foreach (var client in ClientsList)
             {
                 AddToListView(client);
             }
-
+        }
+        private void UpdateOrderList()
+        {
             orderListView.Items.Clear();
             foreach (var order in OrdersList)
             {
@@ -472,7 +480,7 @@ namespace CRM
         private void BirthdayQuery_Click(object sender, EventArgs e)
         {
             double tempSum = default(double);
-            
+
             queryListView.Clear();
             queryListView.Columns.Add("Client");
             queryListView.Columns.Add("Birth Date");
@@ -484,33 +492,44 @@ namespace CRM
 
             foreach (var client in ClientsList)
             {
-                tempSum = 0;
+                tempSum = CalculateClientTotal(client);
+
                 var listItem = new ListViewItem
                 {
                     Tag = client,
                     Text = client.Surname + " " + client.Name
                 };
                 listItem.SubItems.Add(client.BirthDate.ToString("yyyy.MM.dd"));
-
-                foreach (var order in OrdersList)
-                {
-                    if (client.Id == order.ClientId &&
-                        client.BirthDate.Day == order.DateAndTime.Day &&
-                        client.BirthDate.Month == order.DateAndTime.Month &&
-                        order.Status == "Выполнено")
-                    {
-                        tempSum += Convert.ToDouble(order.Sum);
-                    }
-                }
                 listItem.SubItems.Add(tempSum.ToString());
 
                 if (tempSum > 0)
                 {
                     queryListView.Items.Add(listItem);
                 }
-
-                tabControl1.SelectTab(tabQuery);
             }
+
+            tabControl1.SelectTab(tabQuery);
+        }
+        /// <summary>
+        /// Считает общую сумму стоимостей выполненных заказов клиента в его день рождения.
+        /// </summary>
+        /// <param name="client"></param>
+        /// <returns></returns>
+        private double CalculateClientTotal(Client client)
+        {
+            double sum = 0;
+            
+            foreach (var order in OrdersList)
+            {
+                if (client.Id == order.ClientId &&
+                    client.BirthDate.Day == order.DateAndTime.Day &&
+                    client.BirthDate.Month == order.DateAndTime.Month &&
+                    order.Status == "Выполнено")
+                {
+                    sum += Convert.ToDouble(order.Sum);
+                }
+            }
+            return sum;
         }
         /// <summary>
         /// Получить список часов от 00.00 до 24.00 в порядке убывания со средним чеком за каждый час 
@@ -520,10 +539,6 @@ namespace CRM
         /// <param name="e"></param>
         private void HourQuery_Click(object sender, EventArgs e)
         {
-            double tempSum = default(double);
-            int orderCounter = default(int);
-            double average = default(double);
-
             queryListView.Clear();
             queryListView.Sorting = SortOrder.Descending;
             queryListView.Columns.Add("Hour");
@@ -535,11 +550,18 @@ namespace CRM
             queryListView.Columns[1].Width = 160;
             queryListView.Columns[2].Width = 100;
             queryListView.Columns[3].Width = 100;
+            
+            CalculateOrdersHourly();
 
+            tabControl1.SelectTab(tabQuery);
+        }
+        private void CalculateOrdersHourly()
+        {
             for (int currentHour = 0; currentHour < 24; ++currentHour)
             {
-                tempSum = 0;
-                orderCounter = 0;
+                double tempSum = default(double);
+                int orderCounter = default(int);
+                double average = default(double);
 
                 var listItem = new ListViewItem
                 {
@@ -566,8 +588,6 @@ namespace CRM
                     queryListView.Items.Add(listItem);
                 }
             }
-
-            tabControl1.SelectTab(tabQuery);
         }
         /// <summary>
         /// Очистка таблицы запроса
