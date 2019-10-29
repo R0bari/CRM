@@ -1,0 +1,15 @@
+C:\Users\User\source\repos\CRM\CRM\obj\Debug\CRM.csprojResolveAssemblyReference.cache
+C:\Users\User\source\repos\CRM\CRM\obj\Debug\CRM.Properties.Resources.resources
+C:\Users\User\source\repos\CRM\CRM\obj\Debug\CRM.csproj.GenerateResource.cache
+C:\Users\User\source\repos\CRM\CRM\obj\Debug\CRM.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\CRM\CRM\bin\Debug\CRM.exe.config
+C:\Users\User\source\repos\CRM\CRM\bin\Debug\CRM.exe
+C:\Users\User\source\repos\CRM\CRM\bin\Debug\CRM.pdb
+C:\Users\User\source\repos\CRM\CRM\bin\Debug\EntityFramework.dll
+C:\Users\User\source\repos\CRM\CRM\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\User\source\repos\CRM\CRM\bin\Debug\EntityFramework.xml
+C:\Users\User\source\repos\CRM\CRM\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\User\source\repos\CRM\CRM\obj\Debug\CRM.csproj.CopyComplete
+C:\Users\User\source\repos\CRM\CRM\obj\Debug\CRM.exe
+C:\Users\User\source\repos\CRM\CRM\obj\Debug\CRM.pdb
+C:\Users\User\source\repos\CRM\CRM\obj\Debug\CRM.FormMain.resources

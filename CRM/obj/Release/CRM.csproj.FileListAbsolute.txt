@@ -1,0 +1,15 @@
+C:\Users\User\source\repos\CRM\CRM\bin\Release\CRM.exe.config
+C:\Users\User\source\repos\CRM\CRM\bin\Release\CRM.exe
+C:\Users\User\source\repos\CRM\CRM\bin\Release\CRM.pdb
+C:\Users\User\source\repos\CRM\CRM\bin\Release\EntityFramework.dll
+C:\Users\User\source\repos\CRM\CRM\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\User\source\repos\CRM\CRM\bin\Release\EntityFramework.xml
+C:\Users\User\source\repos\CRM\CRM\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.csprojResolveAssemblyReference.cache
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.FormMain.resources
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.Properties.Resources.resources
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.csproj.GenerateResource.cache
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.csproj.CopyComplete
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.exe
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.pdb
