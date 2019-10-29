@@ -214,7 +214,7 @@ namespace CRM
                 Text = order.Client.Surname + " " + order.Client.Name
             };
             listItem.SubItems.Add(order.Sum.ToString());
-            listItem.SubItems.Add(order.DateAndTime.ToString("yyyy.MM.dd  hh:mm"));
+            listItem.SubItems.Add(order.DateAndTime.ToString("yyyy.MM.dd  HH:mm"));
             listItem.SubItems.Add(order.Status);
 
             orderListView.Items.Add(listItem);

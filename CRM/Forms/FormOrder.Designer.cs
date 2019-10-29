@@ -115,7 +115,7 @@
             // 
             // OrderDateAndTime
             // 
-            this.OrderDateAndTime.CustomFormat = "dd.MM.yy  hh.mm";
+            this.OrderDateAndTime.CustomFormat = "dd.MM.yy  HH.mm";
             this.OrderDateAndTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.OrderDateAndTime.Location = new System.Drawing.Point(139, 167);
             this.OrderDateAndTime.MinDate = new System.DateTime(2000, 1, 1, 0, 0, 0, 0);
