@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.addOrderLabel = new System.Windows.Forms.Label();
+            this.OrderLabel = new System.Windows.Forms.Label();
             this.orderSumLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -43,13 +43,13 @@
             // 
             // addOrderLabel
             // 
-            this.addOrderLabel.AutoSize = true;
-            this.addOrderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.addOrderLabel.Location = new System.Drawing.Point(13, 13);
-            this.addOrderLabel.Name = "addOrderLabel";
-            this.addOrderLabel.Size = new System.Drawing.Size(110, 25);
-            this.addOrderLabel.TabIndex = 0;
-            this.addOrderLabel.Text = "Add Order";
+            this.OrderLabel.AutoSize = true;
+            this.OrderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.OrderLabel.Location = new System.Drawing.Point(13, 13);
+            this.OrderLabel.Name = "addOrderLabel";
+            this.OrderLabel.Size = new System.Drawing.Size(110, 25);
+            this.OrderLabel.TabIndex = 0;
+            this.OrderLabel.Text = "Add Order";
             // 
             // orderSumLabel
             // 
@@ -176,7 +176,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.orderSumLabel);
-            this.Controls.Add(this.addOrderLabel);
+            this.Controls.Add(this.OrderLabel);
             this.Name = "FormOrder";
             this.Text = "Adding Order";
             this.ResumeLayout(false);
@@ -186,7 +186,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label addOrderLabel;
+        public System.Windows.Forms.Label OrderLabel;
         private System.Windows.Forms.Label orderSumLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

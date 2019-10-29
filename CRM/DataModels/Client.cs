@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CRM.DataModels
 {
-    public class Client
+    public class Client : IValidate
     {
         /// <summary>
         /// Id клиента
@@ -24,6 +24,15 @@ namespace CRM.DataModels
         /// Дата рождения клиента
         /// </summary>
         public DateTime BirthDate { get; set; }
+        public bool IsValid
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Surname)) return false;
+                if (string.IsNullOrWhiteSpace(Name)) return false;
+                return true;
+            }
+        }
         /// <summary>
         /// Стандартный конструктор без параметров
         /// </summary>

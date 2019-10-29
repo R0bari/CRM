@@ -10,9 +10,11 @@ namespace CRM
 {
     public partial class FormMain : Form
     {
-        public static List<Client> ClientsList = new List<Client>();
-        public static List<Order> OrdersList = new List<Order>();
-
+        private static List<Client> ClientsList = new List<Client>();
+        private static List<Order> OrdersList = new List<Order>();
+        private int clientColumn = default(int),
+            orderColumn = default(int),
+            queryColumn = default(int);
         readonly FormClient _formClient;
         readonly FormOrder _formOrder;
 
@@ -47,14 +49,24 @@ namespace CRM
             _formClient = new FormClient();
             _formOrder = new FormOrder(ClientsList);
         }
+        /// <summary>
+        /// Создание нового клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddClient_Click(object sender, EventArgs e)
         {
             var client = new Client();
             _formClient.Client = client;
+            _formClient.ClientLabel.Text = "Add Client";
             if (_formClient.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
+                    if (!_formClient.Client.IsValid)
+                    {
+                        throw new Exception("Information filled incorrectly.");
+                    }
                     using (var dataBase = new CRMContext())
                     {
                         dataBase.Clients.Add(_formClient.Client);
@@ -69,21 +81,28 @@ namespace CRM
                 }
             }
         }
+        /// <summary>
+        /// Редактирование существующего клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditClient_Click(object sender, EventArgs e)
         {
             try
             {
                 var client = (clientListView.SelectedItems[0].Tag as Client);
                 _formClient.Client = client;
+                _formClient.ClientLabel.Text = "Edit Client";
                 if (_formClient.ShowDialog() == DialogResult.OK)
                 {
 
                     using (var dataBase = new CRMContext())
                     {
                         Client tempClient = dataBase.Clients.Find(client.Id);
-                        tempClient.Surname = client.Surname;
-                        tempClient.Name = client.Name;
-                        tempClient.BirthDate = client.BirthDate;
+                        tempClient.Set(client);
+                        //tempClient.Surname = client.Surname;
+                        //tempClient.Name = client.Name;
+                        //tempClient.BirthDate = client.BirthDate;
                         dataBase.SaveChanges();
                         ClientEdited?.Invoke(_formClient.Client, EventArgs.Empty);
                     }
@@ -91,9 +110,14 @@ namespace CRM
             }
             catch
             {
-                MessageBox.Show("Клиент не выбран.");
+                MessageBox.Show("Client not chosen.");
             }
         }
+        /// <summary>
+        /// Удаление существующего клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveClient_Click(object sender, EventArgs e)
         {
             try
@@ -108,14 +132,24 @@ namespace CRM
                 MessageBox.Show("Клиент не выбран.");
             }
         }
+        /// <summary>
+        /// Создание нового заказа
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddOrder_Click(object sender, EventArgs e)
         {
             var order = new Order();
             _formOrder.Order = order;
+            _formOrder.OrderLabel.Text = "Add Order";
             if (_formOrder.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
+                    if (!_formOrder.Order.IsValid)
+                    {
+                        throw new Exception("Information filled not correctly.");
+                    }
                     order.ClientId = order.Client.Id;
                     using (var dataBase = new CRMContext())
                     {
@@ -131,21 +165,28 @@ namespace CRM
                 }
             }
         }
+        /// <summary>
+        /// Редактирование существующего клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditOrder_Click(object sender, EventArgs e)
         {
             try
             {
                 var order = (orderListView.SelectedItems[0].Tag as Order);
                 _formOrder.Order = order;
+                _formOrder.OrderLabel.Text = "Edit Order";
                 if (_formOrder.ShowDialog() == DialogResult.OK)
                 {
                     using (var dataBase = new CRMContext())
                     {
                         Order tempOrder = dataBase.Orders.Find(order.Id);
-                        tempOrder.Sum = order.Sum;
-                        tempOrder.Client = order.Client;
-                        tempOrder.DateAndTime = order.DateAndTime;
-                        tempOrder.Status = order.Status;
+                        tempOrder.Set(order);
+                        //tempOrder.Sum = order.Sum;
+                        //tempOrder.Client = order.Client;
+                        //tempOrder.DateAndTime = order.DateAndTime;
+                        //tempOrder.Status = order.Status;
                         dataBase.SaveChanges();
                         OrderEdited?.Invoke(_formOrder.Order, EventArgs.Empty);
                     }
@@ -156,6 +197,11 @@ namespace CRM
                 MessageBox.Show("Заказ не выбран.");
             }
         }
+        /// <summary>
+        /// Удаление существующего клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveOrder_Click(object sender, EventArgs e)
         {
             try
@@ -167,11 +213,14 @@ namespace CRM
             }
             catch
             {
-                MessageBox.Show("Заказ не выбран.");
-                //Connect();
-                //UpdateLists();
+                MessageBox.Show("Order not chosen.");
             }
         }
+        /// <summary>
+        /// Выход из программы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Exit_Click(object sender, EventArgs e)
         {
             Close();
@@ -189,7 +238,7 @@ namespace CRM
                 Text = client.Surname
             };
             listItem.SubItems.Add(client.Name);
-            listItem.SubItems.Add(client.BirthDate.ToString("yyyy.MM.dd"));
+            listItem.SubItems.Add(client.BirthDate.ToString("dd.MM.yyyy"));
 
             clientListView.Items.Add(listItem);
         }
@@ -214,7 +263,7 @@ namespace CRM
                 Text = order.Client.Surname + " " + order.Client.Name
             };
             listItem.SubItems.Add(order.Sum.ToString());
-            listItem.SubItems.Add(order.DateAndTime.ToString("yyyy.MM.dd  HH:mm"));
+            listItem.SubItems.Add(order.DateAndTime.ToString("dd.MM.yyyy  HH:mm"));
             listItem.SubItems.Add(order.Status);
 
             orderListView.Items.Add(listItem);
@@ -250,6 +299,11 @@ namespace CRM
             }
         }
 
+        /// <summary>
+        /// Событие при добавление клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void List_ClientAdded(object sender, EventArgs e)
         {
             if (sender is Client client)
@@ -258,6 +312,11 @@ namespace CRM
                 _formOrder.OrderClient.Items.Add(client);
             }
         }
+        /// <summary>
+        /// Событие при редактирование клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void List_ClientEdited(object sender, EventArgs e)
         {
             if (sender is Client client)
@@ -273,17 +332,13 @@ namespace CRM
                 }
                 UpdateLists();
 
-                foreach (Client item in _formOrder.OrderClient.Items)
-                {
-                    if (client.Id == item.Id)
-                    {
-                        item.Surname = client.Surname;
-                        item.Name = client.Name;
-                        item.BirthDate = client.BirthDate;
-                    }
-                }
             }
         }
+        /// <summary>
+        /// Событие при удалении клиента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void List_ClientRemoved(object sender, EventArgs e)
         {
             if (sender is Client client)
@@ -292,26 +347,33 @@ namespace CRM
                 DeleteFromListView(client);
                 ClientsList.Remove(client);
 
-                foreach (var order in OrdersList)
+                for (int i = 0; i < OrdersList.Count; ++i)
                 {
-                    if (order.Client.Id == client.Id)
+                    if (OrdersList[i].Client.Id == client.Id)
                     {
-                        DeleteOrder(order);
-                        DeleteFromListView(order);
-                        OrdersList.Remove(order);
-                        break;
+                        DeleteOrder(OrdersList[i]);
+                        DeleteFromListView(OrdersList[i]);
+                        OrdersList.Remove(OrdersList[i]);
+                        --i;
                     }
                 }
-                foreach (var item in _formOrder.OrderClient.Items)
+
+                for (int i = 0; i < _formOrder.OrderClient.Items.Count; ++i)
                 {
-                    if ((item as Client).Id == client.Id)
+                    if ((_formOrder.OrderClient.Items[i] as Client).Id == client.Id)
                     {
-                        _formOrder.OrderClient.Items.Remove(item);
-                        break;
+                        _formOrder.OrderClient.Items.RemoveAt(i);
+                        --i;
                     }
                 }
+
             }
         }
+        /// <summary>
+        /// Событие при добавлении заказа
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void List_OrderAdded(object sender, EventArgs e)
         {
             OrdersList.Add(sender as Order);
@@ -320,24 +382,34 @@ namespace CRM
                 AddToListView(order);
             }
         }
+        /// <summary>
+        /// Событие при редактировании заказа
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void List_OrderEdited(object sender, EventArgs e)
         {
             if (sender is Order order)
             {
-                foreach (var item in OrdersList)
+                for (int i = 0; i < OrdersList.Count; ++i)
                 {
-                    if (item.Id == order.Id)
+                    if (OrdersList[i].Id == order.Id)
                     {
-                        item.Sum = order.Sum;
-                        item.Client = order.Client;
-                        item.DateAndTime = order.DateAndTime;
-                        item.Status = order.Status;
+                        OrdersList[i].Sum = order.Sum;
+                        OrdersList[i].Client = order.Client;
+                        OrdersList[i].DateAndTime = order.DateAndTime;
+                        OrdersList[i].Status = order.Status;
+                        --i;
                     }
-                    break;
                 }
                 UpdateOrderList();
             }
         }
+        /// <summary>
+        /// Событие при удалении заказа
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void List_OrderRemoved(object sender, EventArgs e)
         {
             var orderId = (int)sender;
@@ -414,13 +486,16 @@ namespace CRM
             }
         }
         /// <summary>
-        /// Начальное заполнение таблиц данными из базы
+        /// Заполнение таблиц данными из базы
         /// </summary>
         private void UpdateLists()
         {
             UpdateClientList();
             UpdateOrderList();
         }
+        /// <summary>
+        /// Заполнение таблицы клиентов из базы
+        /// </summary>
         private void UpdateClientList()
         {
             clientListView.Items.Clear();
@@ -429,6 +504,9 @@ namespace CRM
                 AddToListView(client);
             }
         }
+        /// <summary>
+        /// Заполнение таблицы заказов из базы
+        /// </summary>
         private void UpdateOrderList()
         {
             orderListView.Items.Clear();
@@ -437,6 +515,11 @@ namespace CRM
                 AddToListView(order);
             }
         }
+        /// <summary>
+        /// Заново загрузить данные из базы и сформировать таблицы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Refresh_Click(object sender, EventArgs e)
         {
             Connect();
@@ -450,7 +533,31 @@ namespace CRM
         /// <param name="e"></param>
         private void Client_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            clientListView.ListViewItemSorter = new ListViewColumnComparer(e.Column);
+            if (e.Column == clientColumn)
+            {
+                if (clientListView.Sorting == SortOrder.Ascending)
+                {
+                    clientListView.Sorting = SortOrder.Descending;
+                    clientListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Descending);
+                }
+                else
+                {
+                    clientListView.Sorting = SortOrder.Ascending;
+                    clientListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Ascending);
+                }
+            }
+            else
+            {
+                if (clientListView.Sorting != SortOrder.None)
+                {
+                    clientListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, clientListView.Sorting);
+                }
+                else
+                {
+                    clientListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Ascending);
+                }
+                clientColumn = e.Column;
+            }
         }
         /// <summary>
         /// Сортировка таблицы заказов по столбцам
@@ -459,8 +566,31 @@ namespace CRM
         /// <param name="e"></param>
         private void Order_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            //Сортирует типы string, поэтому некорректно работает при сортировке по Sum
-            //orderListView.ListViewItemSorter = new ListViewColumnComparer(e.Column);
+            if (e.Column == orderColumn)
+            {
+                if (orderListView.Sorting == SortOrder.Ascending)
+                {
+                    orderListView.Sorting = SortOrder.Descending;
+                    orderListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Descending);
+                }
+                else
+                {
+                    orderListView.Sorting = SortOrder.Ascending;
+                    orderListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Ascending);
+                }
+            }
+            else
+            {
+                if (orderListView.Sorting != SortOrder.None)
+                {
+                    orderListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, orderListView.Sorting);
+                }
+                else
+                {
+                    orderListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Ascending);
+                }
+                orderColumn = e.Column;
+            }
         }
         /// <summary>
         /// Сортировка таблицы запроса по столбцам
@@ -469,8 +599,31 @@ namespace CRM
         /// <param name="e"></param>
         private void Query_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            //Сортирует типы string, поэтому некорректно работает при сортировке по Sum
-            //queryListView.ListViewItemSorter = new ListViewColumnComparer(e.Column);
+            if (e.Column == queryColumn)
+            {
+                if (queryListView.Sorting == SortOrder.Ascending)
+                {
+                    queryListView.Sorting = SortOrder.Descending;
+                    queryListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Descending);
+                }
+                else
+                {
+                    queryListView.Sorting = SortOrder.Ascending;
+                    queryListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Ascending);
+                }
+            }
+            else
+            {
+                if (queryListView.Sorting != SortOrder.None)
+                {
+                    queryListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, queryListView.Sorting);
+                }
+                else
+                {
+                    queryListView.ListViewItemSorter = new ListViewColumnComparer(e.Column, SortOrder.Ascending);
+                }
+                queryColumn = e.Column;
+            }
         }
         /// <summary>
         /// Получить сумму заказов со статусом выполнен по каждому клиенту, произведенных в день рождения клиента
@@ -499,8 +652,8 @@ namespace CRM
                     Tag = client,
                     Text = client.Surname + " " + client.Name
                 };
-                listItem.SubItems.Add(client.BirthDate.ToString("yyyy.MM.dd"));
-                listItem.SubItems.Add(tempSum.ToString());
+                listItem.SubItems.Add(client.BirthDate.ToString("dd.MM.yyyy"));
+                listItem.SubItems.Add(tempSum.ToString("F"));
 
                 if (tempSum > 0)
                 {
@@ -518,7 +671,7 @@ namespace CRM
         private double CalculateClientTotal(Client client)
         {
             double sum = 0;
-            
+
             foreach (var order in OrdersList)
             {
                 if (client.Id == order.ClientId &&
@@ -550,11 +703,14 @@ namespace CRM
             queryListView.Columns[1].Width = 160;
             queryListView.Columns[2].Width = 100;
             queryListView.Columns[3].Width = 100;
-            
+
             CalculateOrdersHourly();
 
             tabControl1.SelectTab(tabQuery);
         }
+        /// <summary>
+        /// Считает сумму выполненных заказов по часам и добавляет их в таблицу запроса
+        /// </summary>
         private void CalculateOrdersHourly()
         {
             for (int currentHour = 0; currentHour < 24; ++currentHour)
@@ -578,10 +734,10 @@ namespace CRM
                     }
                 }
                 listItem.SubItems.Add(orderCounter.ToString());
-                listItem.SubItems.Add(tempSum.ToString());
+                listItem.SubItems.Add(tempSum.ToString("F"));
 
                 average = tempSum / orderCounter;
-                listItem.SubItems.Add(average.ToString());
+                listItem.SubItems.Add(average.ToString("F"));
 
                 if (tempSum > 0)
                 {

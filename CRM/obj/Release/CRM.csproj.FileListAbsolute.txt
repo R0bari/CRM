@@ -13,3 +13,4 @@ C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.csproj.CoreCompileInputs.cach
 C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.csproj.CopyComplete
 C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.exe
 C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.pdb
+C:\Users\User\source\repos\CRM\CRM\obj\Release\CRM.FormOrder.resources

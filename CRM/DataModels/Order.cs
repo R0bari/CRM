@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CRM.DataModels
 {
-    public class Order
+    public class Order : IValidate
     {
         /// <summary>
         /// Id заказа
@@ -25,11 +25,32 @@ namespace CRM.DataModels
         /// Состояние заказа
         /// </summary>
         public string Status { get; set; }
-        public int ClientId { get; set; }   //  Внешний ключ
+       
+        /// <summary>
+        /// Проверка на корректность
+        /// </summary>
+        public bool IsValid
+        {
+            get
+            {
+                if (Sum == 0) return false;
+                if (string.IsNullOrWhiteSpace(Status)) return false;
+                return true;
+            }
+        }
         /// <summary>
         /// Клиент, сделавший заказ
         /// </summary>
+        public int ClientId { get; set; }   //  Внешний ключ
         [NotMapped]
         public Client Client { get; set; }  //  Навигационное свойство
+        public void Set(Order order)
+        {
+            Sum = order.Sum;
+            DateAndTime = order.DateAndTime;
+            Status = order.Status;
+            ClientId = order.Client.Id;
+            Client = order.Client;
+        }
     }
 }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.addClientLabel = new System.Windows.Forms.Label();
+            this.ClientLabel = new System.Windows.Forms.Label();
             this.clientSurnameLabel = new System.Windows.Forms.Label();
             this.clientNameLabel = new System.Windows.Forms.Label();
             this.clientSurname = new System.Windows.Forms.TextBox();
@@ -41,13 +41,13 @@
             // 
             // addClientLabel
             // 
-            this.addClientLabel.AutoSize = true;
-            this.addClientLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.addClientLabel.Location = new System.Drawing.Point(13, 13);
-            this.addClientLabel.Name = "addClientLabel";
-            this.addClientLabel.Size = new System.Drawing.Size(111, 25);
-            this.addClientLabel.TabIndex = 0;
-            this.addClientLabel.Text = "Add Client";
+            this.ClientLabel.AutoSize = true;
+            this.ClientLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ClientLabel.Location = new System.Drawing.Point(13, 13);
+            this.ClientLabel.Name = "addClientLabel";
+            this.ClientLabel.Size = new System.Drawing.Size(111, 25);
+            this.ClientLabel.TabIndex = 0;
+            this.ClientLabel.Text = "Add Client";
             // 
             // clientSurnameLabel
             // 
@@ -144,7 +144,7 @@
             this.Controls.Add(this.clientSurname);
             this.Controls.Add(this.clientNameLabel);
             this.Controls.Add(this.clientSurnameLabel);
-            this.Controls.Add(this.addClientLabel);
+            this.Controls.Add(this.ClientLabel);
             this.Name = "FormClient";
             this.Padding = new System.Windows.Forms.Padding(0, 0, 15, 0);
             this.Text = "Adding Client";
@@ -155,7 +155,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label addClientLabel;
+        public System.Windows.Forms.Label ClientLabel;
         private System.Windows.Forms.Label clientSurnameLabel;
         private System.Windows.Forms.Label clientNameLabel;
         private System.Windows.Forms.TextBox clientSurname;
