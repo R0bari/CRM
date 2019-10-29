@@ -33,20 +33,21 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.OrderSum = new System.Windows.Forms.TextBox();
             this.OrderClient = new System.Windows.Forms.ComboBox();
             this.OrderDateAndTime = new System.Windows.Forms.DateTimePicker();
             this.OrderStatus = new System.Windows.Forms.ComboBox();
             this.buttonAccept = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.OrderSum = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.OrderSum)).BeginInit();
             this.SuspendLayout();
             // 
-            // addOrderLabel
+            // OrderLabel
             // 
             this.OrderLabel.AutoSize = true;
             this.OrderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.OrderLabel.Location = new System.Drawing.Point(13, 13);
-            this.OrderLabel.Name = "addOrderLabel";
+            this.OrderLabel.Name = "OrderLabel";
             this.OrderLabel.Size = new System.Drawing.Size(110, 25);
             this.OrderLabel.TabIndex = 0;
             this.OrderLabel.Text = "Add Order";
@@ -94,14 +95,6 @@
             this.label3.Size = new System.Drawing.Size(56, 20);
             this.label3.TabIndex = 4;
             this.label3.Text = "Status";
-            // 
-            // OrderSum
-            // 
-            this.OrderSum.Location = new System.Drawing.Point(139, 68);
-            this.OrderSum.Margin = new System.Windows.Forms.Padding(3, 3, 15, 3);
-            this.OrderSum.Name = "OrderSum";
-            this.OrderSum.Size = new System.Drawing.Size(117, 20);
-            this.OrderSum.TabIndex = 5;
             // 
             // OrderClient
             // 
@@ -161,17 +154,29 @@
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
+            // OrderSum
+            // 
+            this.OrderSum.Location = new System.Drawing.Point(139, 68);
+            this.OrderSum.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.OrderSum.Name = "OrderSum";
+            this.OrderSum.Size = new System.Drawing.Size(117, 20);
+            this.OrderSum.TabIndex = 5;
+            // 
             // FormOrder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(280, 327);
+            this.Controls.Add(this.OrderSum);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonAccept);
             this.Controls.Add(this.OrderStatus);
             this.Controls.Add(this.OrderDateAndTime);
             this.Controls.Add(this.OrderClient);
-            this.Controls.Add(this.OrderSum);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -179,6 +184,7 @@
             this.Controls.Add(this.OrderLabel);
             this.Name = "FormOrder";
             this.Text = "Adding Order";
+            ((System.ComponentModel.ISupportInitialize)(this.OrderSum)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -191,11 +197,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox OrderSum;
         public System.Windows.Forms.ComboBox OrderClient;
         private System.Windows.Forms.DateTimePicker OrderDateAndTime;
         private System.Windows.Forms.ComboBox OrderStatus;
         private System.Windows.Forms.Button buttonAccept;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.NumericUpDown OrderSum;
     }
 }

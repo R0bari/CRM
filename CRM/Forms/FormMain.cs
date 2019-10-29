@@ -306,6 +306,7 @@ namespace CRM
         /// <param name="e"></param>
         private void List_ClientAdded(object sender, EventArgs e)
         {
+            ClientsList.Add(sender as Client);
             if (sender is Client client)
             {
                 AddToListView(client);
@@ -325,9 +326,10 @@ namespace CRM
                 {
                     if (item.Id == client.Id)
                     {
-                        item.Surname = client.Surname;
-                        item.Name = client.Name;
-                        item.BirthDate = client.BirthDate;
+                        item.Set(client);
+                        //item.Surname = client.Surname;
+                        //item.Name = client.Name;
+                        //item.BirthDate = client.BirthDate;
                     }
                 }
                 UpdateLists();
@@ -391,17 +393,25 @@ namespace CRM
         {
             if (sender is Order order)
             {
-                for (int i = 0; i < OrdersList.Count; ++i)
+                foreach (var element in OrdersList)
                 {
-                    if (OrdersList[i].Id == order.Id)
+                    if (element.Id == order.Id)
                     {
-                        OrdersList[i].Sum = order.Sum;
-                        OrdersList[i].Client = order.Client;
-                        OrdersList[i].DateAndTime = order.DateAndTime;
-                        OrdersList[i].Status = order.Status;
-                        --i;
+                        element.Set(order);
+                        break;
                     }
                 }
+                //for (int i = 0; i < OrdersList.Count; ++i)
+                //{
+                //    if (OrdersList[i].Id == order.Id)
+                //    {
+                //        OrdersList[i].Set(order);
+                //        OrdersList[i].Sum = order.Sum;
+                //        OrdersList[i].Client = order.Client;
+                //        OrdersList[i].DateAndTime = order.DateAndTime;
+                //        OrdersList[i].Status = order.Status;
+                //    }
+                //}
                 UpdateOrderList();
             }
         }

@@ -20,7 +20,7 @@ namespace CRM
             set
             {
                 _order = value;
-                OrderSum.Text = _order.Sum.ToString();
+                OrderSum.Value = Convert.ToDecimal(_order.Sum);
                 OrderClient.SelectedItem = _order.Client;
                 if (_order.DateAndTime > OrderDateAndTime.MinDate)
                 {
