@@ -36,27 +36,16 @@ namespace CRM.DataModels
         /// <summary>
         /// Стандартный конструктор без параметров
         /// </summary>
-        public Client()
-        {
-            BirthDate = DateTime.Now;
-        }
+        public Client() => BirthDate = DateTime.Now;
         /// <summary>
         /// Задать клиенту значение другого клиента
         /// </summary>
         /// <param name="client"></param>
-        public void Set(Client client)
-        {
-            Surname = client.Surname;
-            Name = client.Name;
-            BirthDate = client.BirthDate;
-        }
+        public void Set(Client client) => (Surname, Name, BirthDate) = (client.Surname, client.Name, client.BirthDate);
         /// <summary>
         /// Перегрузка метода ToString()
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Surname + " " + Name[0] + ". " + BirthDate.ToShortDateString();
-        }
+        public override string ToString() => Surname + " " + Name[0] + ". " + BirthDate.ToShortDateString();
     }
 }

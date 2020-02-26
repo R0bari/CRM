@@ -10,20 +10,20 @@ namespace CRM
 {
     public partial class FormMain : Form
     {
-        private static List<Client> ClientsList = new List<Client>();
-        private static List<Order> OrdersList = new List<Order>();
-        private int clientColumn = default(int),
-            orderColumn = default(int),
-            queryColumn = default(int);
+        private static readonly List<Client> ClientsList = new List<Client>();
+        private static readonly List<Order> OrdersList = new List<Order>();
+        private int clientColumn = default,
+            orderColumn = default,
+            queryColumn = default;
         readonly FormClient _formClient;
         readonly FormOrder _formOrder;
 
-        EventHandler ClientAdded;
-        EventHandler ClientEdited;
-        EventHandler ClientRemoved;
-        EventHandler OrderAdded;
-        EventHandler OrderEdited;
-        EventHandler OrderRemoved;
+        readonly EventHandler ClientAdded;
+        readonly EventHandler ClientEdited;
+        readonly EventHandler ClientRemoved;
+        readonly EventHandler OrderAdded;
+        readonly EventHandler OrderEdited;
+        readonly EventHandler OrderRemoved;
 
         public FormMain()
         {
@@ -355,8 +355,7 @@ namespace CRM
                     {
                         DeleteOrder(OrdersList[i]);
                         DeleteFromListView(OrdersList[i]);
-                        OrdersList.Remove(OrdersList[i]);
-                        --i;
+                        OrdersList.Remove(OrdersList[i--]);
                     }
                 }
 
@@ -364,8 +363,7 @@ namespace CRM
                 {
                     if ((_formOrder.OrderClient.Items[i] as Client).Id == client.Id)
                     {
-                        _formOrder.OrderClient.Items.RemoveAt(i);
-                        --i;
+                        _formOrder.OrderClient.Items.RemoveAt(i--);
                     }
                 }
 
@@ -401,17 +399,6 @@ namespace CRM
                         break;
                     }
                 }
-                //for (int i = 0; i < OrdersList.Count; ++i)
-                //{
-                //    if (OrdersList[i].Id == order.Id)
-                //    {
-                //        OrdersList[i].Set(order);
-                //        OrdersList[i].Sum = order.Sum;
-                //        OrdersList[i].Client = order.Client;
-                //        OrdersList[i].DateAndTime = order.DateAndTime;
-                //        OrdersList[i].Status = order.Status;
-                //    }
-                //}
                 UpdateOrderList();
             }
         }
@@ -642,8 +629,6 @@ namespace CRM
         /// <param name="e"></param>
         private void BirthdayQuery_Click(object sender, EventArgs e)
         {
-            double tempSum = default(double);
-
             queryListView.Clear();
             queryListView.Columns.Add("Client");
             queryListView.Columns.Add("Birth Date");
@@ -655,8 +640,7 @@ namespace CRM
 
             foreach (var client in ClientsList)
             {
-                tempSum = CalculateClientTotal(client);
-
+                double tempSum = CalculateClientTotal(client);
                 var listItem = new ListViewItem
                 {
                     Tag = client,
@@ -725,10 +709,8 @@ namespace CRM
         {
             for (int currentHour = 0; currentHour < 24; ++currentHour)
             {
-                double tempSum = default(double);
-                int orderCounter = default(int);
-                double average = default(double);
-
+                double tempSum = default;
+                int orderCounter = default;
                 var listItem = new ListViewItem
                 {
                     Text = currentHour.ToString()
@@ -746,7 +728,7 @@ namespace CRM
                 listItem.SubItems.Add(orderCounter.ToString());
                 listItem.SubItems.Add(tempSum.ToString("F"));
 
-                average = tempSum / orderCounter;
+                double average = tempSum / orderCounter;
                 listItem.SubItems.Add(average.ToString("F"));
 
                 if (tempSum > 0)
@@ -760,9 +742,6 @@ namespace CRM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Clear_Click(object sender, EventArgs e)
-        {
-            queryListView.Clear();
-        }
+        private void Clear_Click(object sender, EventArgs e) => queryListView.Clear();
     }
 }

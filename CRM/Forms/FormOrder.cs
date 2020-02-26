@@ -42,12 +42,8 @@ namespace CRM
             }
         }
 
-        private void ButtonAccept_Click(object sender, EventArgs e)
-        {
-            _order.Client = OrderClient.SelectedItem as Client;
-            _order.Sum = Convert.ToDouble(OrderSum.Text);
-            _order.DateAndTime = OrderDateAndTime.Value;
-            _order.Status = OrderStatus.Text;
-        }
+        private void ButtonAccept_Click(object sender, EventArgs e) =>
+            (_order.Client, _order.Sum, _order.DateAndTime, _order.Status) = 
+            (OrderClient.SelectedItem as Client, Convert.ToDouble(OrderSum.Text), OrderDateAndTime.Value, OrderStatus.Text);
     }
 }

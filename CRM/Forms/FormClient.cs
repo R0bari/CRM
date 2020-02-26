@@ -29,11 +29,7 @@ namespace CRM
         {
             InitializeComponent();
         }
-        private void ButtonAccept_Click(object sender, EventArgs e)
-        {
-            _client.Surname = clientSurname.Text;
-            _client.Name = clientName.Text;
-            _client.BirthDate = clientBirthDate.Value;
-        }
+        private void ButtonAccept_Click(object sender, EventArgs e) =>
+            (_client.Surname, _client.Name, _client.BirthDate) = (clientSurname.Text, clientName.Text, clientBirthDate.Value);
     }
 }
